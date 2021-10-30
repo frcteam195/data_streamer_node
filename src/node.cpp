@@ -1,8 +1,4 @@
-
 #include "ros/ros.h"
-#include "std_msgs/String.h"
-
-#define ZMQ_BUILD_DRAFT_API
 
 #include <zmq.h>
 #include <thread>
@@ -11,9 +7,27 @@
 #include <mutex>
 #include <iostream>
 
+#include "data_handler.hpp"
+#include "webserver.hpp"
+
+#define RATE (20)
+
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "data_streamer_node");
-  ros::spin();
-  return 0;
+
+    ros::init(argc, argv, "data_streamer_node");
+    ros::NodeHandle node_handle;
+    ros::Rate rate(RATE);
+
+    DataHandler handler( node_handle );
+    WebServer server( handler );
+    server.run_as_thread();
+
+    while( ros::ok() )
+    {
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    return 0;
 }
