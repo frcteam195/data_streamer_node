@@ -36,6 +36,8 @@ add_executable( data_streamer_node
   src/data_handler.cpp
   lib/nodejs/http_parser/http_parser.c )
 
+add_dependencies(data_streamer_node rio_control_node)
+
 target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
 target_link_libraries(data_streamer_node Threads::Threads)
 target_link_libraries(data_streamer_node fmt)
