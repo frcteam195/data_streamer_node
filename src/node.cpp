@@ -16,18 +16,37 @@ int main(int argc, char **argv)
 {
 
     ros::init(argc, argv, "data_streamer_node");
-    ros::NodeHandle node_handle;
+    ros::NodeHandle nh;
     ros::Rate rate(RATE);
 
-    DataHandler handler( node_handle );
-    WebServer server( handler );
-    server.run_as_thread();
+    DataHandler handler = DataHandler( &nh );
+
+	ros::Subscriber joystick_sub = nh.subscribe("JoystickStatus",
+                                                10,
+                                                &DataHandler::joystick_status_cb,
+                                                &handler);
+
+	ros::Subscriber motors_sub = nh.subscribe("MotorStatus",
+                                              10,
+                                              &DataHandler::motor_status_cb,
+                                              &handler);
+
+	ros::Subscriber robot_sub = nh.subscribe("RobotStatus",
+                                             10,
+                                             &DataHandler::robot_status_cb,
+                                             &handler);
+
+
+    WebServer server( &handler );
+    std::thread server_thread = std::thread( std::bind(&WebServer::run_as_thread, &server) );
 
     while( ros::ok() )
     {
+        handler.step();
         ros::spinOnce();
         rate.sleep();
     }
 
+    server_thread.join();
     return 0;
 }

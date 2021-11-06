@@ -1,0 +1,35 @@
+html{
+    padding: 0;
+    left: 0;
+}
+
+body{
+    padding: 0;
+    left: 0;
+}
+
+#topics_div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: 30%;
+    //padding: 5px;
+}
+
+#signals_div{
+    position: absolute;
+    top: 30%;
+    left: 0;
+    width: 20%;
+    height: 70%;
+    //padding: 5px;
+}
+
+#main_div{
+    position: absolute;
+    top: 0;
+    left: 20%;
+    width: 80%;
+    height: 100%;
+}

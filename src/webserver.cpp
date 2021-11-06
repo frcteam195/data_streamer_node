@@ -13,7 +13,7 @@ RESP init_resp( RESP resp )
 
 using router_t = restinio::router::express_router_t<>;
 
-WebServer::WebServer( DataHandler& _handler )
+WebServer::WebServer( DataHandler* _handler )
     : handler( _handler )
 {
 
@@ -49,8 +49,10 @@ std::unique_ptr< router_t > WebServer::handle_requests()
 		[]( auto req, auto ){
             init_resp( req->create_response() )
                 .append_header( restinio::http_field::content_type, "text/plain; charset=utf-8" )
+                .append_header( restinio::http_field_t::access_control_allow_origin, "*" )
                 .set_body( "Enpoints:\n "
-                           "\t /topic_list")
+                           "\t /topic_list"
+                           "\t /signal_list")
                 .done();
 
             return restinio::request_accepted();
@@ -64,6 +66,22 @@ std::unique_ptr< router_t > WebServer::handle_requests()
 
             init_resp( req->create_response() )
                 .append_header( restinio::http_field::content_type, "application/json" )
+                .append_header( restinio::http_field_t::access_control_allow_origin, "*" )
+                .set_body( body )
+                .done();
+
+            return restinio::request_accepted();
+		} );
+
+	router->http_get(
+		"/signal_list",
+		[this]( auto req, auto ){
+            std::cout << "Sending Signal List\n";
+            std::string body = get_signal_list_json();
+
+            init_resp( req->create_response() )
+                .append_header( restinio::http_field::content_type, "application/json" )
+                .append_header( restinio::http_field_t::access_control_allow_origin, "*" )
                 .set_body( body )
                 .done();
 
@@ -75,8 +93,7 @@ std::unique_ptr< router_t > WebServer::handle_requests()
 
 std::string WebServer::get_topic_list_json()
 {
-    std::string out = "{\"test\": \"bleh\"}";
-    std::vector<std::string> topics = handler.get_topic_list();
+    std::vector<std::string> topics = handler->get_topic_list();
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
 
@@ -92,7 +109,30 @@ std::string WebServer::get_topic_list_json()
     writer.EndArray();
     writer.EndObject();
 
-    out = s.GetString();
+    std::string out = s.GetString();
 
+    return out;
+}
+
+std::string WebServer::get_signal_list_json()
+{
+    std::vector<std::string> topics = handler->get_signal_list();
+    rapidjson::StringBuffer s;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(s);
+
+    writer.StartObject();
+    writer.Key("signals");
+    writer.StartArray();
+
+
+    for( int i = 0; i < topics.size(); i++ )
+    {
+        writer.String(topics[i].c_str());
+    }
+
+    writer.EndArray();
+    writer.EndObject();
+
+    std::string out = s.GetString();
     return out;
 }

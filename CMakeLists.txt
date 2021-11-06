@@ -3,15 +3,16 @@ set(CMAKE_CXX_STANDARD 17)
 
 project( data_streamer_node )
 
-find_package(catkin REQUIRED COMPONENTS roscpp )
-
-find_package(Boost REQUIRED COMPONENTS system regex)
+find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node ros_msg_parser)
+find_package(Boost REQUIRED COMPONENTS system regex )
 
 add_subdirectory(lib/fmt)
 add_subdirectory(lib/nodejs/http_parser)
 add_subdirectory(lib/restinio)
 add_subdirectory(lib/json_dto)
 add_subdirectory(lib/so_5/)
+add_subdirectory(lib/ros_msg_parser/)
+
 
 include_directories(
  ${catkin_INCLUDE_DIRS}
@@ -21,6 +22,7 @@ include_directories(
  lib/rapidjson/include
  lib/fmt/include
  lib/nodejs/http_parser/
+ lib/ros_msg_parser/include/ros_msg_parser/
  )
 
 catkin_package()
@@ -34,11 +36,14 @@ add_executable( data_streamer_node
   src/node.cpp
   src/webserver.cpp
   src/data_handler.cpp
+  src/data_callbacks.cpp
   lib/nodejs/http_parser/http_parser.c )
 
-add_dependencies(data_streamer_node rio_control_node)
 
 target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
 target_link_libraries(data_streamer_node Threads::Threads)
 target_link_libraries(data_streamer_node fmt)
 target_link_libraries(data_streamer_node so)
+target_link_libraries(data_streamer_node ros_msg_parser)
+
+add_dependencies(data_streamer_node rio_control_node)
