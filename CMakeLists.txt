@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project( data_streamer_node )
 
-find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node ros_msg_parser)
+find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node)
 find_package(Boost REQUIRED COMPONENTS system regex )
 
 add_subdirectory(lib/fmt)
@@ -23,6 +23,7 @@ include_directories(
  lib/fmt/include
  lib/nodejs/http_parser/
  lib/ros_msg_parser/include/ros_msg_parser/
+ lib/ros_msg_parser/include/
  )
 
 catkin_package()
