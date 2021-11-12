@@ -13,6 +13,7 @@ add_subdirectory(lib/json_dto)
 add_subdirectory(lib/so_5/)
 add_subdirectory(lib/ros_msg_parser/)
 
+set(CMAKE_BUILD_RPATH "../")
 
 include_directories(
  ${catkin_INCLUDE_DIRS}
