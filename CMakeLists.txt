@@ -6,6 +6,8 @@ project( data_streamer_node )
 find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node)
 find_package(Boost REQUIRED COMPONENTS system regex )
 
+SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
+
 add_subdirectory(lib/fmt)
 add_subdirectory(lib/nodejs/http_parser)
 add_subdirectory(lib/restinio)
