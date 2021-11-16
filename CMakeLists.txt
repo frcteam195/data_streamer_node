@@ -10,7 +10,6 @@ SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 add_subdirectory(lib/nodejs/http_parser)
 add_subdirectory(lib/restinio)
-add_subdirectory(lib/so_5/)
 add_subdirectory(lib/ros_msg_parser/)
 
 set(CMAKE_BUILD_RPATH "../")
@@ -44,16 +43,16 @@ add_executable( data_streamer_node
 
 target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
 target_link_libraries(data_streamer_node Threads::Threads)
-target_link_libraries(data_streamer_node so)
 target_link_libraries(data_streamer_node ros_msg_parser)
-
 
 if(ROBOT_ARCHITECTURE_NATIVE)
   target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/native/libfmt.a)
+  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKso_5/build/native/libso_s.5.5.24.3.a)
 endif(ROBOT_ARCHITECTURE_NATIVE)
 
 if(ROBOT_ARCHITECTURE_AARCH64)
   target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/aarch64/libfmt.a)
+  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKso_5/build/aarch64/libso_s.5.5.24.3.a)
 endif(ROBOT_ARCHITECTURE_AARCH64)
 
 
