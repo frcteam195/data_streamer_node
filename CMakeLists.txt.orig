@@ -3,7 +3,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 project( data_streamer_node )
 
-find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  message_generation
+  rio_control_node )
+
 find_package(Boost REQUIRED COMPONENTS system regex )
 
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
@@ -45,6 +49,11 @@ target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
 target_link_libraries(data_streamer_node Threads::Threads)
 target_link_libraries(data_streamer_node ros_msg_parser)
 
+<<<<<<< HEAD
+add_dependencies(data_streamer_node
+  rio_control_node
+  test_data_node )
+=======
 if(ROBOT_ARCHITECTURE_NATIVE)
   target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/native/libfmt.a)
   target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKso_5/build/native/libso_s.5.5.24.3.a)
@@ -57,3 +66,4 @@ endif(ROBOT_ARCHITECTURE_AARCH64)
 
 
 add_dependencies(data_streamer_node rio_control_node)
+>>>>>>> 5911694043f246ad06e329b40937bbaf6b354434
