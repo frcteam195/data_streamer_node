@@ -8,10 +8,8 @@ find_package(Boost REQUIRED COMPONENTS system regex )
 
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
-add_subdirectory(lib/fmt)
 add_subdirectory(lib/nodejs/http_parser)
 add_subdirectory(lib/restinio)
-add_subdirectory(lib/json_dto)
 add_subdirectory(lib/so_5/)
 add_subdirectory(lib/ros_msg_parser/)
 
@@ -23,10 +21,10 @@ include_directories(
  lib/
  lib/asio/include
  lib/rapidjson/include
- lib/fmt/include
  lib/nodejs/http_parser/
  lib/ros_msg_parser/include/ros_msg_parser/
  lib/ros_msg_parser/include/
+ ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/include
  )
 
 catkin_package()
@@ -46,8 +44,17 @@ add_executable( data_streamer_node
 
 target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
 target_link_libraries(data_streamer_node Threads::Threads)
-target_link_libraries(data_streamer_node fmt)
 target_link_libraries(data_streamer_node so)
 target_link_libraries(data_streamer_node ros_msg_parser)
+
+
+if(ROBOT_ARCHITECTURE_NATIVE)
+  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/native/libfmt.a)
+endif(ROBOT_ARCHITECTURE_NATIVE)
+
+if(ROBOT_ARCHITECTURE_AARCH64)
+  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/aarch64/libfmt.a)
+endif(ROBOT_ARCHITECTURE_AARCH64)
+
 
 add_dependencies(data_streamer_node rio_control_node)
