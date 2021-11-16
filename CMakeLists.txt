@@ -8,8 +8,6 @@ find_package(Boost REQUIRED COMPONENTS system regex )
 
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
-add_subdirectory(lib/nodejs/http_parser)
-add_subdirectory(lib/restinio)
 add_subdirectory(lib/ros_msg_parser/)
 
 set(CMAKE_BUILD_RPATH "../")

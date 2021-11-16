@@ -80,8 +80,6 @@ void DataHandler::test_data_cb(const test_data_node::TestData& msg)
 
     test_data = msg;
 
-    std::cout << "\n\nSUBBBBB\n\n\n" << std::endl;
-
     RosMsgParser::Parser parser("/TestData",
                                 ROSType(DataType<test_data_node::TestData>::value()),
                                 Definition<test_data_node::TestData>::value());
@@ -99,5 +97,4 @@ void DataHandler::test_data_cb(const test_data_node::TestData& msg)
                     it.first.toStdString(),
                     it.second.convert<double>() );
     }
-
 }
