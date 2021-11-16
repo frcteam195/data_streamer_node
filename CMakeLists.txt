@@ -3,30 +3,39 @@ set(CMAKE_CXX_STANDARD 17)
 
 project( data_streamer_node )
 
-find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node)
-find_package(Boost REQUIRED COMPONENTS system regex )
+find_package( catkin REQUIRED COMPONENTS
+  roscpp
+  roscpp_serialization
+  rosbag_storage
+  message_generation
+  rio_control_node )
+
+find_package( Boost REQUIRED COMPONENTS
+  system
+  regex )
 
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
-
-add_subdirectory(lib/ros_msg_parser/)
-
-set(CMAKE_BUILD_RPATH "../")
 
 include_directories(
  ${catkin_INCLUDE_DIRS}
  include/
  lib/
  lib/asio/include
- lib/rapidjson/include
+ lib/ros_msg_parser/3rdparty/
  lib/nodejs/http_parser/
  lib/ros_msg_parser/include/ros_msg_parser/
  lib/ros_msg_parser/include/
  ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/include
  )
 
-catkin_package()
+catkin_package( )
 
-message("CATKIN INCLUDES:${catkin_INCLUDE_DIRS}")
+
+file(GLOB ros_msg_parser_SRC ./lib/ros_msg_parser/src/*.cpp)
+
+
+message( STATUS ${ros_msg_parser_SRC})
+
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -36,12 +45,12 @@ add_executable( data_streamer_node
   src/webserver.cpp
   src/data_handler.cpp
   src/data_callbacks.cpp
-  lib/nodejs/http_parser/http_parser.c )
+  lib/nodejs/http_parser/http_parser.c
+  ${ros_msg_parser_SRC})
 
 
 target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
 target_link_libraries(data_streamer_node Threads::Threads)
-target_link_libraries(data_streamer_node ros_msg_parser)
 
 if(ROBOT_ARCHITECTURE_NATIVE)
   target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/native/libfmt.a)
