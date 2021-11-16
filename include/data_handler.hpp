@@ -14,6 +14,8 @@
 #include <rio_control_node/Motor_Configuration.h>
 #include <rio_control_node/Motor_Status.h>
 
+#include <test_data_node/TestData.h>
+
 class DataHandler{
 public:
 
@@ -46,10 +48,12 @@ public:
     rio_control_node::Joystick_Status joystick_status;
     rio_control_node::Motor_Status motor_status;
     rio_control_node::Robot_Status robot_status;
+    test_data_node::TestData test_data;
 
     void motor_status_cb(const rio_control_node::Motor_Status& msg);
     void joystick_status_cb(const rio_control_node::Joystick_Status& msg);
     void robot_status_cb(const rio_control_node::Robot_Status& msg);
+    void test_data_cb(const test_data_node::TestData& msg);
 
 };
 

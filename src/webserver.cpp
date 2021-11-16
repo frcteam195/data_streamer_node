@@ -78,6 +78,7 @@ std::unique_ptr< router_t > WebServer::handle_requests()
 		[this]( auto req, auto ){
             std::cout << "Sending Signal List\n";
             std::string body = get_signal_list_json();
+            std::cout << " signal list: " << body << "\n";
 
             init_resp( req->create_response() )
                 .append_header( restinio::http_field::content_type, "application/json" )

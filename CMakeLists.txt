@@ -3,7 +3,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 project( data_streamer_node )
 
-find_package(catkin REQUIRED COMPONENTS roscpp message_generation rio_control_node)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  message_generation
+  rio_control_node )
+
 find_package(Boost REQUIRED COMPONENTS system regex )
 
 add_subdirectory(lib/fmt)
@@ -48,4 +52,6 @@ target_link_libraries(data_streamer_node fmt)
 target_link_libraries(data_streamer_node so)
 target_link_libraries(data_streamer_node ros_msg_parser)
 
-add_dependencies(data_streamer_node rio_control_node)
+add_dependencies(data_streamer_node
+  rio_control_node
+  test_data_node )

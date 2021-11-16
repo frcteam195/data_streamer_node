@@ -37,6 +37,12 @@ int main(int argc, char **argv)
                                              &handler);
 
 
+	ros::Subscriber test_data_sub = nh.subscribe("Testdata",
+                                                 10,
+                                                 &DataHandler::test_data_cb,
+                                                 &handler);
+
+
     WebServer server( &handler );
     std::thread server_thread = std::thread( std::bind(&WebServer::run_as_thread, &server) );
 

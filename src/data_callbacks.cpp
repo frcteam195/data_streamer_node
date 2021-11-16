@@ -74,3 +74,30 @@ void DataHandler::robot_status_cb(const rio_control_node::Robot_Status& msg)
     }
 }
 
+
+void DataHandler::test_data_cb(const test_data_node::TestData& msg)
+{
+
+    test_data = msg;
+
+    std::cout << "\n\nSUBBBBB\n\n\n" << std::endl;
+
+    RosMsgParser::Parser parser("/TestData",
+                                ROSType(DataType<test_data_node::TestData>::value()),
+                                Definition<test_data_node::TestData>::value());
+
+    std::vector<uint8_t> buffer( ros::serialization::serializationLength(msg) );
+    ros::serialization::OStream stream(buffer.data(), buffer.size());
+    ros::serialization::Serializer<test_data_node::TestData>::write(stream, msg);
+
+    FlatMessage flat_container;
+    parser.deserializeIntoFlatMsg( Span<uint8_t>(buffer), &flat_container);
+
+    for(auto&it: flat_container.value)
+    {
+        add_signal( "TestData",
+                    it.first.toStdString(),
+                    it.second.convert<double>() );
+    }
+
+}
