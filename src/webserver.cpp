@@ -35,7 +35,7 @@ void WebServer::run_as_thread()
     restinio::run(
         restinio::on_this_thread<traits_t>()
         .port( 8080 )
-        .address( "localhost" )
+        .address( "0.0.0.0" )
         .request_handler( this->handle_requests() ) );
 }
 
