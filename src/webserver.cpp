@@ -24,7 +24,10 @@ using traits_t =
 WebServer::WebServer( DataHandler* _handler )
     : handler( _handler )
 {
-
+    handler->set_send_function( std::bind( &WebServer::send_to_ws,
+                                           this,
+                                           std::placeholders::_1,
+                                           std::placeholders::_2 ));
 }
 
 
@@ -46,11 +49,6 @@ void WebServer::run_as_thread()
     using traits_t = restinio::traits_t< restinio::asio_timer_manager_t,
                                          restinio::single_threaded_ostream_logger_t,
                                          router_t >;
-
-    handler->set_send_function( std::bind( &WebServer::send_to_ws,
-                                           this,
-                                           std::placeholders::_1,
-                                           std::placeholders::_2 ));
 
     restinio::run(
         restinio::on_this_thread<traits_t>()
@@ -149,7 +147,6 @@ std::unique_ptr< router_t > WebServer::handle_requests(ws_registry_t& registry)
                                 handler->update_reciever_datalist( wsh->connection_id(),
                                                                    m->payload() );
 
-								wsh->send_message( *m );
 							}
 							else if( rws::opcode_t::ping_frame == m->opcode() )
 							{

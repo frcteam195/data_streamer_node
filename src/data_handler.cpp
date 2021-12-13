@@ -13,19 +13,12 @@ void DataHandler::step()
 {
 }
 
-void DataHandler::clear_signals( std::string topic )
+void DataHandler::add_signal( std::string name, float data )
 {
-    topic_signals[topic] = SIGNALS();
-}
+    if( !signals.count(name) )
+        signals[name] = 0;
 
-void DataHandler::add_signal( std::string topic,
-                              std::string name, float data )
-{
-
-    if( !topic_signals.count(topic) )
-        topic_signals[topic] = SIGNALS();
-
-    topic_signals[topic][name] = data;
+    signals[name] = data;
 }
 
 std::vector<std::string> DataHandler::get_topic_list()
@@ -44,14 +37,10 @@ std::vector<std::string> DataHandler::get_topic_list()
 
 std::vector<std::string> DataHandler::get_signal_list()
 {
-
     std::vector<std::string> out;
 
-    for(auto big_it = topic_signals.begin(); big_it != topic_signals.end(); ++big_it)
-    {
-        for(auto it = big_it->second.begin(); it != big_it->second.end(); ++it) {
-            out.push_back(it->first);
-        }
+    for(auto it = signals.begin(); it != signals.end(); ++it) {
+        out.push_back( it->first );
     }
 
     return out;
@@ -64,6 +53,7 @@ void DataHandler::set_send_function( std::function<void(std::uint64_t, std::stri
 
 void DataHandler::create_reciever( std::uint64_t id )
 {
+    std::lock_guard<std::mutex> guard( reciever_lock );
     std::cout << "#$####### Creating reciever: " << id << "\n";
     // check if exists
     recievers[id] = std::vector<std::string>();
@@ -71,11 +61,12 @@ void DataHandler::create_reciever( std::uint64_t id )
 
 void DataHandler::remove_reciever( std::uint64_t id )
 {
+    std::lock_guard<std::mutex> guard( reciever_lock );
     std::cout << "#$####### Delete reciever: " << id << "\n";
     recievers.erase( id );
 }
 
 void DataHandler::update_reciever_datalist( std::uint64_t id, std::string json )
 {
-    send_to_reciever( id, json );
+    std::lock_guard<std::mutex> guard( reciever_lock );
 }
