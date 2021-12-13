@@ -6,95 +6,20 @@ using namespace RosMsgParser;
 
 void DataHandler::motor_status_cb(const rio_control_node::Motor_Status& msg)
 {
-    motor_status = msg;
-
-    RosMsgParser::Parser parser("/MotorStatus",
-                                ROSType(DataType<rio_control_node::Motor_Status>::value()),
-                                Definition<rio_control_node::Motor_Status>::value());
-
-    std::vector<uint8_t> buffer( ros::serialization::serializationLength(msg) );
-    ros::serialization::OStream stream(buffer.data(), buffer.size());
-    ros::serialization::Serializer<rio_control_node::Motor_Status>::write(stream, msg);
-
-    FlatMessage flat_container;
-    parser.deserializeIntoFlatMsg( Span<uint8_t>(buffer), &flat_container);
-
-    for(auto&it: flat_container.value)
-    {
-        add_signal( "MotorStatus",
-                    it.first.toStdString(),
-                    it.second.convert<double>() );
-    }
-
+    add_message("/MotorStatus", msg);
 }
 
 void DataHandler::joystick_status_cb(const rio_control_node::Joystick_Status& msg)
 {
-    joystick_status = msg;
-
-    RosMsgParser::Parser parser("/JoystickStatus",
-                                ROSType(DataType<rio_control_node::Joystick_Status>::value()),
-                                Definition<rio_control_node::Joystick_Status>::value());
-
-    std::vector<uint8_t> buffer( ros::serialization::serializationLength(msg) );
-    ros::serialization::OStream stream(buffer.data(), buffer.size());
-    ros::serialization::Serializer<rio_control_node::Joystick_Status>::write(stream, msg);
-
-    FlatMessage flat_container;
-    parser.deserializeIntoFlatMsg( Span<uint8_t>(buffer), &flat_container);
-
-    for(auto&it: flat_container.value)
-    {
-        add_signal( "JoystickStatus",
-                    it.first.toStdString(),
-                    it.second.convert<double>() );
-    }
+    add_message("/JoystickStatus", msg);
 }
 
 void DataHandler::robot_status_cb(const rio_control_node::Robot_Status& msg)
 {
-    robot_status = msg;
-
-    RosMsgParser::Parser parser("/RobotStatus",
-                                ROSType(DataType<rio_control_node::Robot_Status>::value()),
-                                Definition<rio_control_node::Robot_Status>::value());
-
-    std::vector<uint8_t> buffer( ros::serialization::serializationLength(msg) );
-    ros::serialization::OStream stream(buffer.data(), buffer.size());
-    ros::serialization::Serializer<rio_control_node::Robot_Status>::write(stream, msg);
-
-    FlatMessage flat_container;
-    parser.deserializeIntoFlatMsg( Span<uint8_t>(buffer), &flat_container);
-
-    for(auto&it: flat_container.value)
-    {
-        add_signal( "RobotStatus",
-                    it.first.toStdString(),
-                    it.second.convert<double>() );
-    }
+    add_message( "/RobotStatus", msg );
 }
-
 
 void DataHandler::test_data_cb(const test_data_node::TestData& msg)
 {
-
-    test_data = msg;
-
-    RosMsgParser::Parser parser("/TestData",
-                                ROSType(DataType<test_data_node::TestData>::value()),
-                                Definition<test_data_node::TestData>::value());
-
-    std::vector<uint8_t> buffer( ros::serialization::serializationLength(msg) );
-    ros::serialization::OStream stream(buffer.data(), buffer.size());
-    ros::serialization::Serializer<test_data_node::TestData>::write(stream, msg);
-
-    FlatMessage flat_container;
-    parser.deserializeIntoFlatMsg( Span<uint8_t>(buffer), &flat_container);
-
-    for(auto&it: flat_container.value)
-    {
-        add_signal( "TestData",
-                    it.first.toStdString(),
-                    it.second.convert<double>() );
-    }
+    add_message( "/TestData", msg );
 }

@@ -16,11 +16,14 @@ public:
     ~WebServer();
 
     void run_as_thread();
-    std::unique_ptr< router_t > handle_requests( );
+    void send_to_ws( std::uint64_t id, std::string data );
+    std::unique_ptr< router_t > handle_requests( ws_registry_t& reg );
     std::string get_topic_list_json();
     std::string get_signal_list_json();
 
     DataHandler* handler;
+    ws_registry_t registry;
+
 };
 
 

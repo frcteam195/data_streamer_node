@@ -7,7 +7,6 @@ DataHandler::DataHandler(ros::NodeHandle* _handle)
 
 DataHandler::~DataHandler()
 {
-
 }
 
 void DataHandler::step()
@@ -56,4 +55,27 @@ std::vector<std::string> DataHandler::get_signal_list()
     }
 
     return out;
+}
+
+void DataHandler::set_send_function( std::function<void(std::uint64_t, std::string)> func )
+{
+    send_to_reciever = func;
+}
+
+void DataHandler::create_reciever( std::uint64_t id )
+{
+    std::cout << "#$####### Creating reciever: " << id << "\n";
+    // check if exists
+    recievers[id] = std::vector<std::string>();
+}
+
+void DataHandler::remove_reciever( std::uint64_t id )
+{
+    std::cout << "#$####### Delete reciever: " << id << "\n";
+    recievers.erase( id );
+}
+
+void DataHandler::update_reciever_datalist( std::uint64_t id, std::string json )
+{
+    send_to_reciever( id, json );
 }
