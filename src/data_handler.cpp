@@ -1,4 +1,7 @@
 #include "data_handler.hpp"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/document.h"
 
 
 DataHandler::DataHandler(ros::NodeHandle* _handle)
@@ -69,4 +72,23 @@ void DataHandler::remove_reciever( std::uint64_t id )
 void DataHandler::update_reciever_datalist( std::uint64_t id, std::string json )
 {
     std::lock_guard<std::mutex> guard( reciever_lock );
+    rapidjson::Document document;
+    document.Parse(json.c_str());
+
+    if ( !document.HasMember("requested_data") ){
+        std::cout << "ERROR: invalid json requires 'requested_data' field\n";
+        return;
+    }
+
+    if ( !document["requested_data"].IsArray() ){
+        std::cout << "ERROR: invalid 'requested_data' should be array\n";
+        return;
+    }
+
+    if( !recievers.count(id) )
+        recievers[id] = std::vector<std::string>();
+
+    for (auto& v : document["requested_data"].GetArray())
+        recievers[id].push_back( v.GetString() );
+
 }

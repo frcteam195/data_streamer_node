@@ -216,7 +216,6 @@ std::string WebServer::get_signal_list_json()
     writer.Key("signals");
     writer.StartArray();
 
-
     for( int i = 0; i < topics.size(); i++ )
     {
         writer.String(topics[i].c_str());
