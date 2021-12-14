@@ -24,6 +24,9 @@ using namespace RosMsgParser;
 class DataHandler{
 public:
 
+    // a signal is a timestamp in seconds and a value
+    typedef std::pair<double, float> SIGNAL;
+
     DataHandler(ros::NodeHandle* _handle);
     ~DataHandler();
 
@@ -42,7 +45,7 @@ public:
     std::mutex reciever_lock;
     std::function<void(std::uint64_t, std::string)> send_to_reciever;
     std::map<std::uint64_t, std::vector<std::string> > recievers;
-    std::map<std::string, float> signals;
+    std::map<std::string, SIGNAL> signals;
 
     template <typename T>
     void add_message( std::string name, const T& msg )
@@ -63,14 +66,12 @@ public:
             add_signal( it.first.toStdString(),
                         it.second.convert<double>() );
         }
-
     }
 
     void motor_status_cb(const rio_control_node::Motor_Status& msg);
     void joystick_status_cb(const rio_control_node::Joystick_Status& msg);
     void robot_status_cb(const rio_control_node::Robot_Status& msg);
     void test_data_cb(const test_data_node::TestData& msg);
-
 };
 
 #endif

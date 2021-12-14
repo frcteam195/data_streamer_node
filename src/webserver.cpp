@@ -2,12 +2,14 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 
+using namespace std::chrono;
+
 namespace rws = restinio::websocket::basic;
 
 template < typename RESP >
 RESP init_resp( RESP resp )
 {
-	resp.append_header( restinio::http_field::server, "RESTinio sample server /v.0.2" );
+	resp.append_header( restinio::http_field::server, "RESTinio Server for ros data" );
 	resp.append_header_date_field();
 	return resp;
 }
@@ -15,11 +17,23 @@ RESP init_resp( RESP resp )
 using router_t = restinio::router::express_router_t<>;
 using ws_registry_t = std::map< std::uint64_t, rws::ws_handle_t >;
 
+// use this to enable logging
+/*
 using traits_t =
 	restinio::traits_t<
 		restinio::asio_timer_manager_t,
 		restinio::single_threaded_ostream_logger_t,
 		router_t >;
+*/
+
+// use this to disable logging
+using traits_t =
+	restinio::traits_t<
+		restinio::asio_timer_manager_t,
+		restinio::null_logger_t,
+		router_t >;
+
+
 
 WebServer::WebServer( DataHandler* _handler )
     : handler( _handler )
@@ -29,7 +43,6 @@ WebServer::WebServer( DataHandler* _handler )
                                            std::placeholders::_1,
                                            std::placeholders::_2 ));
 }
-
 
 WebServer::~WebServer()
 {
@@ -45,11 +58,6 @@ void WebServer::send_to_ws( std::uint64_t id, std::string data )
 
 void WebServer::run_as_thread()
 {
-	using namespace std::chrono;
-    using traits_t = restinio::traits_t< restinio::asio_timer_manager_t,
-                                         restinio::single_threaded_ostream_logger_t,
-                                         router_t >;
-
     restinio::run(
         restinio::on_this_thread<traits_t>()
         .port( 8080 )
@@ -140,7 +148,7 @@ std::unique_ptr< router_t > WebServer::handle_requests(ws_registry_t& registry)
 							{
 
                                 std::cout << "------------------------------\n";
-                                std::cout << " Activate Socket\n";
+                                std::cout << " Activate Socket: " << wsh->connection_id()<< "\n";
                                 std::cout << " body: " << m->payload() << "\n";
                                 std::cout << "------------------------------\n";
 
@@ -155,7 +163,7 @@ std::unique_ptr< router_t > WebServer::handle_requests(ws_registry_t& registry)
 								wsh->send_message( resp );
 
                                 std::cout << "------------------------------\n";
-                                std::cout << " Ping Frame -> send Ping\n";
+                                std::cout << " Ping Frame -> send Pong: " << wsh->connection_id() << "\n";
                                 std::cout << "------------------------------\n";
 
 							}
@@ -165,7 +173,7 @@ std::unique_ptr< router_t > WebServer::handle_requests(ws_registry_t& registry)
                                 handler->remove_reciever( wsh->connection_id() );
 
                                 std::cout << "------------------------------\n";
-                                std::cout << " Kill Connection\n";
+                                std::cout << " Kill Connection: " << wsh->connection_id() << "\n";
                                 std::cout << "------------------------------\n";
 							}
 						});

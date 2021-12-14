@@ -14,14 +14,42 @@ DataHandler::~DataHandler()
 
 void DataHandler::step()
 {
+    // every step we will send all the data we have in buffer to each client
+    // this will include some stale data
+    for( auto rec_it = recievers.begin(); rec_it != recievers.end(); rec_it++ )
+    {
+        rapidjson::StringBuffer s;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(s);
+
+        writer.StartObject();
+        writer.Key("data");
+        writer.StartArray();
+
+        // loop throught the list of signals that reciever wants to compose a json message
+        for( int i = 0; i < rec_it->second.size(); i++ )
+        {
+
+            std::string signal_name = rec_it->second[i];
+            writer.StartArray();
+            writer.Double( signals[signal_name].first );
+            writer.Double( signals[signal_name].second );
+            writer.EndArray();
+        }
+
+        writer.EndArray();
+        writer.EndObject();
+
+        std::string json = s.GetString();
+        send_to_reciever( rec_it->first, json );
+    }
+
+
 }
 
 void DataHandler::add_signal( std::string name, float data )
 {
-    if( !signals.count(name) )
-        signals[name] = 0;
-
-    signals[name] = data;
+    signals[name].first = ros::WallTime::now().toSec();
+    signals[name].second = data;
 }
 
 std::vector<std::string> DataHandler::get_topic_list()
@@ -41,11 +69,9 @@ std::vector<std::string> DataHandler::get_topic_list()
 std::vector<std::string> DataHandler::get_signal_list()
 {
     std::vector<std::string> out;
-
     for(auto it = signals.begin(); it != signals.end(); ++it) {
         out.push_back( it->first );
     }
-
     return out;
 }
 
@@ -57,15 +83,12 @@ void DataHandler::set_send_function( std::function<void(std::uint64_t, std::stri
 void DataHandler::create_reciever( std::uint64_t id )
 {
     std::lock_guard<std::mutex> guard( reciever_lock );
-    std::cout << "#$####### Creating reciever: " << id << "\n";
-    // check if exists
     recievers[id] = std::vector<std::string>();
 }
 
 void DataHandler::remove_reciever( std::uint64_t id )
 {
     std::lock_guard<std::mutex> guard( reciever_lock );
-    std::cout << "#$####### Delete reciever: " << id << "\n";
     recievers.erase( id );
 }
 
@@ -85,8 +108,7 @@ void DataHandler::update_reciever_datalist( std::uint64_t id, std::string json )
         return;
     }
 
-    if( !recievers.count(id) )
-        recievers[id] = std::vector<std::string>();
+    recievers[id] = std::vector<std::string>();
 
     for (auto& v : document["requested_data"].GetArray())
         recievers[id].push_back( v.GetString() );
