@@ -4,27 +4,8 @@ var selected_signals_list = [];
 
 var server_address = "127.0.0.1:8080";
 var data_server = "http://" + server_address;
-var socket = new WebSocket("ws://" + server_address + "/data");
 
-
-socket.onopen = function(e) {
-    console.log("[open] Connection established");
-    console.log("Sending to server");
-};
-
-socket.onmessage = function(event) {
-    console.log(`[message] Data received from server: ${event.data}`);
-};
-
-socket.onclose = function(event) {
-    if (event.wasClean) {
-        console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-    } else {
-        // e.g. server process killed or network down
-        // event.code is usually 1006 in this case
-        console.log('[close] Connection died');
-    }
-};
+var socket = null;
 
 function send_chosen_signals(){
     var selected_signals = [...document.querySelectorAll(".signal_button.selected")];
@@ -101,19 +82,57 @@ async function update_signals()
         new_elem.className += "signal_button";
         new_elem.onclick = click_signal_button;
         signals_div.appendChild(new_elem);
+
     });
 }
 
-function open_socket(){
-    
+
+function connect_socket(){
+    var ip = document.querySelector("#input_socket_ip").value;
+    socket = new WebSocket("ws://" + ip + "/data");
+
+    socket.onopen = function(e) {
+        console.log("[open] Connection established");
+    };
+
+    socket.onmessage = function(event) {
+        console.log(event.data);
+    };
+
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+        } else {
+        }
+
+        alert("Connection Closed");
+        socket = null;
+    };
+
 }
 
 async function main(){
-    update_signals();
-    update_topics();
+    //update_signals();
+    //update_topics();
+}
 
-    open_socket();
+async function step(){
+    var connection_status_div = document.querySelector("#connection_status");
+
+    if( socket != null )
+    {
+        connection_status_div.innerHTML = "Connected";
+        connection_status_div.classList.remove("error_text");
+        connection_status_div.classList.add("good_text");
+    }
+    else
+    {
+        connection_status_div.innerHTML = "Not Connected";
+        connection_status_div.classList.add("error_text");
+        connection_status_div.classList.remove("good_text");
+    }
 }
 
 
 main();
+
+setInterval( step, 1000);

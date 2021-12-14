@@ -1,6 +1,16 @@
+:root{
+    --green: #4b7f52ff;
+    --dark-green: #1f271bff;
+    --blue: #19647eff;
+    --white: #fceff9ff;
+    --yellow: #dbd56eff;
+    --red: #CC2936;
+}
+
 html{
     padding: 0;
     left: 0;
+    background-color: var(--white);
 }
 
 body{
@@ -8,32 +18,25 @@ body{
     left: 0;
 }
 
-#topics_div{
-    position: absolute;
+#sidebar{
+    position: fixed;
     top: 0;
     left: 0;
-    width: 20%;
-    height: 30%;
-    //padding: 5px;
-}
-
-#signals_div{
-    position: absolute;
-    top: 30%;
-    left: 0;
-    width: 20%;
-    height: 70%;
-    //padding: 5px;
-}
-
-#main_div{
-    position: absolute;
-    top: 0;
-    left: 20%;
-    width: 80%;
+    width: 300px;
     height: 100%;
+    background-color: var(--yellow);
+    box-shadow: 1px 1px 5px #888;
+    text-align: center;
 }
 
-button.selected{
-    border: 2px solid #00ff00;
+.good_text{
+    color: var(--green);
+}
+
+.error_text{
+    color: var(--red) !important;
+}
+
+#sidebar.hidden{
+    left: -300px;
 }
