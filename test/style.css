@@ -24,9 +24,59 @@ body{
     left: 0;
     width: 300px;
     height: 100%;
-    background-color: var(--yellow);
-    box-shadow: 1px 1px 5px #888;
     text-align: center;
+    transition: left 0.5s;
+    z-index: 10;
+}
+
+#sidebar .toggle{
+    position: relative;
+    top: 50%;
+    left: 52%;
+}
+
+#sidebar>div{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px #888;
+    background-color: var(--yellow);
+}
+
+#sidebar input{
+    width: 60%;
+}
+
+#input_socket_ip{
+    width: 70%;
+}
+
+#div_connection_status{
+}
+
+#div_signals{
+    text-align: left;
+}
+
+.signal{
+    width: 100%;
+    text-align: left;
+}
+
+.signal button{
+    width: 100%;
+    background-color: var(--white);
+    border: none;
+    border-radius: 2px;
+    padding: 2px;
+    margin: 2px;
+    text-align: left;
+}
+
+.signal button.selected{
+    background-color: var(--green);
+    border: none;
+    border-radius: 2px;
 }
 
 .good_text{
@@ -39,4 +89,13 @@ body{
 
 #sidebar.hidden{
     left: -300px;
+    transition: left 0.5s;
+}
+
+#chart{
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
 }

@@ -1,0 +1,49 @@
+<html>
+
+  <head>
+    <title>Data Test</title>
+
+    <link rel="stylesheet" href="style.css"/>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+  </head>
+
+
+  <body>
+
+    <div id="sidebar" class="">
+      <button class="toggle" onclick="toggle_hidden_elem_parent(this);"> > </button>
+
+      <div id="div_connection_status">
+        <h5 id="connection_status" class="error_text">Not Connected</h5>
+        <input id="input_socket_ip" placeholder="IP Address"></input>
+        <button onclick="connect_socket()">Connect</button>
+      </div>
+
+      <div id="div_presets">
+        <input></input><button>Open Preset</button>
+      </div>
+
+      <div id="div_signals">
+
+        <template id="TEMPLATE_signal">
+          <div class="signal">
+            <button class="signal_button">Test signal</button>
+          </div>
+        </template>
+
+      </div>
+
+    </div>
+
+    <div id="main_div">
+      <div id="chart"></div>
+    </div>
+
+  </body>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script type="text/javascript" src="utilities.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+
+</html>
