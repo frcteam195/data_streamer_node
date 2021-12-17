@@ -40,6 +40,9 @@ message( STATUS ${ros_msg_parser_SRC})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
+find_package(fmt REQUIRED)
+find_package(sobjectizer CONFIG REQUIRED)
+
 add_executable( data_streamer_node
   src/node.cpp
   src/webserver.cpp
@@ -50,16 +53,12 @@ add_executable( data_streamer_node
 
 
 target_link_libraries(data_streamer_node ${catkin_LIBRARIES})
-target_link_libraries(data_streamer_node Threads::Threads)
+target_link_libraries(data_streamer_node Threads::Threads fmt::fmt sobjectizer::StaticLib)
 
 if(ROBOT_ARCHITECTURE_NATIVE)
-  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/native/libfmt.a)
-  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKso_5/build/native/libso_s.5.5.24.3.a)
 endif(ROBOT_ARCHITECTURE_NATIVE)
 
 if(ROBOT_ARCHITECTURE_AARCH64)
-  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKfmt/build/aarch64/libfmt.a)
-  target_link_libraries(data_streamer_node ${CMAKE_SOURCE_DIR}/../../../third_party_libs/CKso_5/build/aarch64/libso_s.5.5.24.3.a)
 endif(ROBOT_ARCHITECTURE_AARCH64)
 
 
