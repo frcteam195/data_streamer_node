@@ -47,7 +47,7 @@ function create_signal_elem( name ){
 
     element.querySelector(".signal_button").onclick = function(){
         this.classList.toggle("selected");
-        send_chosen_signals();
+        select_signal(name, this.classList.contains("selected"));
     };
 
     return element;

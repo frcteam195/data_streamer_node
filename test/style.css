@@ -41,6 +41,8 @@ body{
     border-radius: 5px;
     box-shadow: 1px 1px 5px #888;
     background-color: var(--yellow);
+    overflow-y: scroll;
+    max-height: 50%;
 }
 
 #sidebar input{
