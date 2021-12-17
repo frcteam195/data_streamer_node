@@ -10,7 +10,7 @@
 #include "data_handler.hpp"
 #include "webserver.hpp"
 
-#define RATE (20)
+#define RATE (100)
 
 int main(int argc, char **argv)
 {
