@@ -6,6 +6,7 @@
 
 DataHandler::DataHandler(ros::NodeHandle* _handle)
 {
+    (void)_handle;
 }
 
 DataHandler::~DataHandler()
@@ -26,7 +27,7 @@ void DataHandler::step()
         writer.StartArray();
 
         // loop throught the list of signals that reciever wants to compose a json message
-        for( int i = 0; i < rec_it->second.size(); i++ )
+        for( size_t i = 0; i < rec_it->second.size(); i++ )
         {
 
             std::string signal_name = rec_it->second[i];
@@ -58,7 +59,7 @@ std::vector<std::string> DataHandler::get_topic_list()
     ros::master::getTopics(topic_infos);
     std::vector<std::string> topic_list;
 
-    for( int i = 0; i < topic_infos.size(); i++ )
+    for( size_t i = 0; i < topic_infos.size(); i++ )
     {
         topic_list.push_back( topic_infos[i].name );
     }
