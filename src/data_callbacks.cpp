@@ -23,3 +23,10 @@ void DataHandler::test_data_cb(const test_data_node::TestData& msg)
 {
     add_message( "/TestData", msg );
 }
+
+
+void DataHandler::active_traj_cb(const trajectory_follower_node::TrajectoryFollowCue& msg)
+{
+    add_message( "/ActiveTrajectoryFollower", msg );
+}
+

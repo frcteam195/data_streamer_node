@@ -8,7 +8,8 @@ find_package( catkin REQUIRED COMPONENTS
   roscpp_serialization
   rosbag_storage
   message_generation
-  rio_control_node )
+  rio_control_node
+  trajectory_follower_node)
 
 find_package( Boost REQUIRED COMPONENTS
   system

@@ -13,6 +13,7 @@
 #include <rio_control_node/Motor_Control.h>
 #include <rio_control_node/Motor_Configuration.h>
 #include <rio_control_node/Motor_Status.h>
+#include <trajectory_follower_node/TrajectoryFollowCue.h>
 
 #include <test_data_node/TestData.h>
 #include <ros_msg_parser/ros_parser.hpp>
@@ -72,6 +73,7 @@ public:
     void joystick_status_cb(const rio_control_node::Joystick_Status& msg);
     void robot_status_cb(const rio_control_node::Robot_Status& msg);
     void test_data_cb(const test_data_node::TestData& msg);
+    void active_traj_cb(const trajectory_follower_node::TrajectoryFollowCue& msg);
 };
 
 #endif

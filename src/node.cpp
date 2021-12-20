@@ -42,6 +42,12 @@ int main(int argc, char **argv)
                                                  &DataHandler::test_data_cb,
                                                  &handler);
 
+    ros::Subscriber test_active_traj = nh.subscribe("/active_trajectory",
+                                                 1,
+                                                 &DataHandler::active_traj_cb,
+                                                 &handler);
+
+
     WebServer server( &handler );
     std::thread server_thread = std::thread(
         std::bind(&WebServer::run_as_thread, &server) );
