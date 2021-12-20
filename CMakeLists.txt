@@ -9,7 +9,7 @@ find_package( catkin REQUIRED COMPONENTS
   rosbag_storage
   message_generation
   rio_control_node
-  trajectory_follower_node)
+  local_planner_node)
 
 find_package( Boost REQUIRED COMPONENTS
   system
